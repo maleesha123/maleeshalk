@@ -1,0 +1,156 @@
+jQuery(function($) {
+
+	
+	
+	// accordian
+	$('.accordion-toggle').on('click', function(){
+		$(this).closest('.panel-group').children().each(function(){
+		$(this).find('>.panel-heading').removeClass('active');
+		 });
+
+	 	$(this).closest('.panel-heading').toggleClass('active');
+	});
+
+	//Initiat WOW JS
+	new WOW().init();
+
+	// portfolio filter
+	$(window).load(function(){'use strict';
+		var $portfolio_selectors = $('.portfolio-filter >li>a');
+		var $portfolio = $('.portfolio-items');
+		$portfolio.isotope({
+			itemSelector : '.portfolio-item',
+			layoutMode : 'fitRows'
+		});
+		
+		$portfolio_selectors.on('click', function(){
+			$portfolio_selectors.removeClass('active');
+			$(this).addClass('active');
+			var selector = $(this).attr('data-filter');
+			$portfolio.isotope({ filter: selector });
+			return false;
+		});
+	});
+
+	// Contact form
+	var form = $('#main-contact-form');
+	var formNews = $('#main-news-form');
+
+	$(document).ready(function() {
+
+
+	  form.on('submit', function(e){
+	    // validation code here
+	    e.preventDefault();
+		var form_status = $('<div class="form_status"></div>');
+		var name = $("#name").val();
+ 		var email = $("#email").val();
+ 		var message = $("#message").val();
+ 		var phone = $("#phone").val();
+
+		$.ajax({
+	        type: "POST",
+	        data: {"action":"message", "data":{"name":name,"email":email, "message":message, "phone":phone}},
+	        url: "sendmail.php",
+	        beforeSend: function(){
+				form.prepend( form_status.html('<p><i class="fa fa-spinner fa-spin"></i> Email is sending...</p>').fadeIn() );
+			},
+			success: function(data){
+	        
+	            console.log(data);
+	            var rsp = JSON.parse(data);
+
+	            if ( rsp != undefined) {
+
+		            if(rsp.status == 'failed')
+		            	form_status.html('<p class="text-fail-msg">' + rsp.message + '</p>').delay(3000).fadeOut();
+		            else	
+		            	form_status.html('<p class="text-success-msg">' + rsp.message + '</p>').delay(3000).fadeOut();
+		        }
+	        }
+	    });
+
+		return false;
+			    
+	  });
+
+	  formNews.on('submit', function(e){
+        // validation code here
+        e.preventDefault();
+        var form_status = $('<div class="form_status"></div>');
+        var msg = $("#message").val();
+        var news = $("#message").data("nid");
+        var by = $("#name").val();
+
+        $.ajax({
+            type: "POST",
+            data: {"action":"comment", "data":{"news_id":news,"news_type":"O", "comment":msg, "comment_by":by}},
+            url: "api/rest/ops.php",
+            beforeSend: function(){
+                formNews.prepend( form_status.html('<p><i class="fa fa-spinner fa-spin"></i> Message is sending for approval.</p>').fadeIn() );
+            },
+            success: function(data){
+            
+                console.log(data);
+
+                if ( data != undefined) {
+
+                    if(data.status == 'failed')
+                        form_status.html('<p class="text-fail-msg">' + data.msg + '</p>').delay(3000).fadeOut();
+                    else    
+                        form_status.html('<p class="text-success-msg">' + data.msg + '</p>').delay(3000).fadeOut();
+                }
+            }
+        });
+        
+
+        return false;
+                
+      });
+	});
+
+
+
+
+//	form.on('submit', function(event){
+		
+//		event.preventDetaults();
+		// $.ajax({
+		// 	url: $(this).attr('action'),
+
+		// 	beforeSend: function(){
+		// 		form.prepend( form_status.html('<p><i class="fa fa-spinner fa-spin"></i> Email is sending...</p>').fadeIn() );
+		// 	}
+		// }).done(function(data){
+		// 	form_status.html('<p class="text-success">' + data.message + '</p>').delay(3000).fadeOut();
+		// });
+//	});
+
+	
+	
+
+	
+	//Pretty Photo
+	
+	var viewportWidth = $('body').innerWidth();
+
+	// $("a[rel^='projects']").prettyPhoto({
+	// 	social_tools: false,
+	// 	theme: 'pp_default',
+ //        slideshow: 3000,
+ //        autoplay_slideshow: true
+	// });
+
+	/*$("a[rel^='inpics']").prettyPhoto({
+		social_tools: false,
+		theme: 'pp_default',
+        slideshow: 3000,
+        autoplay_slideshow: true
+	}
+	});	*/
+	
+	$('#p1').on('click', function() {
+
+		location.href = "project-detail.html";
+	});
+});
