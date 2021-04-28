@@ -1,0 +1,32 @@
+.box
+{
+position: absolute;
+top: 100%;
+left: 50%
+transform: translate(-50%,-50%);
+padding: 20px;
+box-sizing: border-box;
+background: black;
+border-radius: 4px;
+box-shadow: 0 5px 15px rgba(0,0,0,.5);
+display: flex;
+}
+.box .imgbx
+{
+	width: 150px;
+	flex: 0 0 150px;
+}
+.box .imgbx img
+{
+	max-width: 100%
+}
+.box .content
+{
+	padding-left: 20px;
+}
+.box .content h2
+{
+margin: 0;
+padding-left: 0;
+color: white;
+}
